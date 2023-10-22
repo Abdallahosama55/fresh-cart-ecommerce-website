@@ -8,12 +8,14 @@ export function CartContextProvider({children}) {
     const [CartProduct, setCartProduct] = useState(null)
     const [TotelcartPrice, setTotelcartPrice] = useState(0)        
     const [NumbercartItems, setNumbercartItems] = useState(0)
+    const[WishlistCount,SetWishlistCount]=useState(0)
 
+const [ Wishlist, setWishlist] = useState(null)
     const{token}=useContext(authcontext)
     async function AddProductTocart(Productid){
     try {
        
-            const{data}=await axios.post('https://ecommerce.routemisr.com/api/v1/cart',{"productId":Productid},{headers:{"token":token}})
+            const{data}=await axios.post('https://ecommerce.routemisr.com/api/v1/cart',{"productId":Productid},{headers:{"token":localStorage.getItem('tkn')}})
             console.log(data.data)
         
 
@@ -32,11 +34,10 @@ export function CartContextProvider({children}) {
     }
     async function GettProductTocart(){
         try {
-                const{data}=await axios.get('https://ecommerce.routemisr.com/api/v1/cart',{headers:{"token":token}})
+                const{data}=await axios.get('https://ecommerce.routemisr.com/api/v1/cart',{headers:{"token":localStorage.getItem('tkn')}})
                 setNumbercartItems(data.numOfCartItems)
                 setTotelcartPrice(data.data.totalCartPrice)
                 setCartProduct(data.data.products)
-                console.log(data.data.totalCartPrice)
                
                 return data
               
@@ -51,7 +52,7 @@ export function CartContextProvider({children}) {
    
 async function DelProduct(id){
         try {
-                const{data}=await axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/${id}`,{headers:{"token":token}}) 
+                const{data}=await axios.delete(`https://ecommerce.routemisr.com/api/v1/cart/${id}`,{headers:{"token":localStorage.getItem('tkn')}}) 
                 setNumbercartItems(data.numOfCartItems)
                 setTotelcartPrice(data.data.totalCartPrice)
                 setCartProduct(data.data.products) 
@@ -66,7 +67,7 @@ async function DelProduct(id){
 
 async function UpdateProduct(id,count_value){
         try {
-                const{data}=await axios.put(`https://ecommerce.routemisr.com/api/v1/cart/${id}`,{"count":count_value},{headers:{"token":token}}) 
+                const{data}=await axios.put(`https://ecommerce.routemisr.com/api/v1/cart/${id}`,{"count":count_value},{headers:{"token":localStorage.getItem('tkn')}}) 
                 setNumbercartItems(data.numOfCartItems)
                 setTotelcartPrice(data.data.totalCartPrice)
                 
@@ -81,8 +82,56 @@ async function UpdateProduct(id,count_value){
         }
 
 }
+
+
+async function addProductTOwishList(id){
+
+        
+        try {
+        const{data}= await axios.post('https://ecommerce.routemisr.com/api/v1/wishlist',{"productId":id},{headers:{token:localStorage.getItem('tkn')}})  
+       return data
+        }
+        catch(error){
+                console.log(error,"error in add product to wishlist") 
+        }
+        }
+
+
+
+        async function removeProductInwishList(id){
+
+                try {
+                        const{data}= await axios.delete(`https://ecommerce.routemisr.com/api/v1/wishlist/${id}`,{headers:{"token":localStorage.getItem('tkn')}})  
+                        return data
+                        
+                } catch (error) {
+                        
+                console.log(error,"error in remove product to wishlist") 
+                        
+                }
+                
+             
+        }
+        async function Get_user_wishlist(){
+                try {
+                        
+                        const{data}=  await axios.get("https://ecommerce.routemisr.com/api/v1/wishlist",{headers:{"token":localStorage.getItem('tkn')}})  
+                        SetWishlistCount(data.count)
+                        setWishlist(data)
+                        return data
+                } catch (error) {
+                        console.log(error,"error in get product from wishlist") 
+                }
+           
+
+        }
+        useEffect(() => {
+
+                Get_user_wishlist()
+        }, [])
+        
   return (
-    <CartContextadd.Provider value={{AddProductTocart,DelProduct ,UpdateProduct,CartProduct,TotelcartPrice,NumbercartItems,GettProductTocart}}>
+    <CartContextadd.Provider value={{Wishlist,WishlistCount,removeProductInwishList,Get_user_wishlist,addProductTOwishList,AddProductTocart,DelProduct ,UpdateProduct,CartProduct,TotelcartPrice,NumbercartItems,GettProductTocart}}>
    {children}
    </CartContextadd.Provider>)
   

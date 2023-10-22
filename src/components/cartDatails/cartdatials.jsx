@@ -64,7 +64,7 @@ async function  DecrementProduct(id,count){
 
   if (CartProduct===null) {
     return <>
-    <div className=" d-flex justify-content-center align-items-center ">
+    <div className=" d-flex justify-content-center align-items-center mt-5 py-5 ">
     <Oval
   height={80}
   width={80}

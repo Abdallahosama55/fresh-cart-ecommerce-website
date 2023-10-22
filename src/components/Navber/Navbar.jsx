@@ -4,6 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { BiLogoInstagramAlt} from 'react-icons/bi';
 import {BsFacebook } from 'react-icons/bs';
 import {AiFillTwitterCircle } from 'react-icons/ai';
+import{AiTwotoneStar,AiOutlineHeart}from 'react-icons/ai';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import logo from'../../assets/freshcart-logo.svg'
@@ -12,19 +13,18 @@ import {BsCart} from 'react-icons/bs';
 import {LuLogOut} from 'react-icons/lu';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { useContext,useState } from 'react';
+import { useContext,useState ,useEffect} from 'react';
 import { authcontext } from '../../context/AuthntictionContext';
 import {CartContextadd} from '../../CartContext/CartContext'
 import { CardText } from 'react-bootstrap';
 import OrderDatials from '../cartDatails/cartdatials';
 
 function Navbar_comp() {
-  const{  GettProductTocart}= useContext(CartContextadd)
-  GettProductTocart()
-  const{NumbercartItems}=useContext(CartContextadd)
+  const{  GettProductTocart,WishlistCount,Get_user_wishlist}= useContext(CartContextadd)
 
-console.log(NumbercartItems)
-  
+  const{NumbercartItems}=useContext(CartContextadd)
+  GettProductTocart()
+
   const nav=useNavigate()
   const nav2=useNavigate()
  const {token, setToken}= useContext(authcontext)
@@ -33,13 +33,23 @@ function cartDetails(){
 nav2('/orders')
 
 }
+
+  Get_user_wishlist()
+
+
+  function Wishlist(){
+  
+
+  nav('/Wishlist')
+   }
+
  function logout(){
   localStorage.removeItem('tkn')
   setToken(null)
 nav('/signin')
  }
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar expand="lg" className="bg-body-tertiary fixed-top">
       <Container>
         <Navbar.Brand Link="#home"><Link to='/'><img src={logo}/></Link></Navbar.Brand>
         {!(token==null)? 
@@ -48,18 +58,33 @@ nav('/signin')
           <BsCart size={20}/>
     <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
       {NumbercartItems}
-      <span className="visually-hidden">unread messages</span>
+
     </span>
   </button>
+  
           
         </Nav.Link>
           :""}
+          {!(token==null)? 
+            <Nav.Link>
+            <button type="button" onClick={Wishlist}  className="btn btn-light position-relative ms-md-3 p-0 align-items-center pe-1  ">
+            <AiOutlineHeart size={25}/>
+      <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {WishlistCount}
+  
+      </span>
+    </button>
+    
+            
+          </Nav.Link>
+            :""}
+
         
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
         {!(token==null)? 
       
-        <Nav className="ms">
+        <Nav className="ms-auto">
         <Nav.Link to="/signin"><Link to="/" className='link-nav'>Home</Link></Nav.Link>
         <Nav.Link to="/signup"><Link to="/brands" className='link-nav'>Brands</Link></Nav.Link>
         <Nav.Link to="/signup"><Link to="/categories" className='link-nav'>Categories</Link></Nav.Link>

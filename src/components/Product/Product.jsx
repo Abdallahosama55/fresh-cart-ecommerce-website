@@ -5,15 +5,20 @@ import * as axios from 'axios';
 import { Container } from 'react-bootstrap';
 import { useState } from 'react';
 import { Grid } from  'react-loader-spinner'
-import {AiTwotoneStar} from 'react-icons/ai'
-
+import {AiTwotoneStar,AiOutlineHeart,AiFillHeart} from 'react-icons/ai'
 import { useQuery } from 'react-query';
 import HomeSlider from '../HomeSlider/HomeSlider';
+
 import CategorySilder from '../CategorySlider/CategorySilder';
+
+import { CartContextadd } from '../../CartContext/CartContext'
+
 import { Link } from 'react-router-dom';
 function Product() {
 
+const{addProductTOwishList,removeProductInwishList}=useContext(CartContextadd);
   const {token}=useContext(authcontext);
+  const [IsToggle, setIsToggle] = useState({})
 
  function getallProduct(){
 
@@ -25,7 +30,23 @@ function Product() {
 const{isError,isFetched,isLoading,data}=useQuery("allproduct",getallProduct)
   console.log(data?.data.data)
 
+async function addWashlist(id){
+  setIsToggle((prevToggle) => ({
+    ...prevToggle,
+    [id]: !prevToggle[id] // Toggle the value for the specific product ID
+  }));
+  if (IsToggle[id]) {
+    
+    return await removeProductInwishList(id);
+  } else {
+    return await addProductTOwishList(id);
+  
+  }
 
+
+}
+
+ 
   return (
     <Fragment>
 
@@ -39,13 +60,14 @@ const{isError,isFetched,isLoading,data}=useQuery("allproduct",getallProduct)
 <img src={product.imageCover} className='w-100' alt='product'/>
 <h6 className=' text-success pt-2 '>{product.category.name}</h6>
 <h5>{product.title.split(' ').slice(0,2).join("-")}</h5>
+</Link>
 <div className='row'>
 <p className='col'>{product.price +" EGP"}</p>
-<p className='col d-flex justify-content-center align-items-center'><AiTwotoneStar className=' text-warning  '/>{product.ratingsAverage}</p>
-
+<p className='col d-flex justify-content-end align-items-center'><button onClick={()=>addWashlist(product.id)}> {IsToggle[product.id]? <AiFillHeart className=' text-danger me-2'  size={25}/>:<AiOutlineHeart className=' text-danger me-2' size={25}/>}</button><AiTwotoneStar className=' text-warning  '/>{product.ratingsAverage}
+</p>
 </div>
 
-</Link>
+
 
 </div></div>})}
 
@@ -53,7 +75,7 @@ const{isError,isFetched,isLoading,data}=useQuery("allproduct",getallProduct)
 
 
 
-</div>:<div className='d-flex justify-content-center align-content-center vh-100'><Grid
+</div>:<div className='d-flex justify-content-center align-content-center vh-100 mt-5 p-0'><Grid
 height="80"
 width="80"
 color="#4fa94d"

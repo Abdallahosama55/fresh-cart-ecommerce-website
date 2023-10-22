@@ -19,17 +19,43 @@ function CategorySilder() {
 
       const{data,isLoading}=useQuery("subcatgory",getsubcategory)
       console.log(data?.data.data)
-
-    const settings = {
+      var settings = {
         dots: true,
-        infinite: true,
-        speed: 700,
+        infinite: false,
+        speed: 500,
         slidesToShow: 4,
         slidesToScroll: 1,
+        initialSlide: 0,
         autoplay: true, // Enable autoplay
-    autoplaySpeed: 2000, // Set autoplay speed in milliseconds
-      
+        autoplaySpeed: 2000, // Set autoplay speed in milliseconds
+        responsive: [
+          {
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 1,
+              infinite: true,
+              dots: true
+            }
+          },
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 1,
+              initialSlide: 2
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+        ]
       };
+
       if(isLoading){
         return <div className='d-flex justify-content-center align-content-center vh-100'><Grid
         height="80"
@@ -48,7 +74,7 @@ function CategorySilder() {
       
      
   return (
-    <div className='home-slider p-2'>
+    <div className=' p-2'>
     <h3>Categories </h3>
 <Slider {...settings}>
 

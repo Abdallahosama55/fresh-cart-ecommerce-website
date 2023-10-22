@@ -16,11 +16,12 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import ProductDetails from './components/ProductDetails/ProductDetails';
 import { CartContextProvider } from './CartContext/CartContext';
 import OrderDatials from './components/cartDatails/cartdatials';
+import Wishlist from './components/wishlist/Wishlist';
 
 function App() {
   
    let query_client=new QueryClient()
- 
+
   return (
    
         <div className="">
@@ -35,6 +36,7 @@ function App() {
                   <Route index element={<Product />} />
                   <Route path="Cart" element={<ProtectedRoute> <Cart /></ProtectedRoute>} />
                   <Route path="Categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
+                  <Route path="Wishlist" element={<ProtectedRoute><Wishlist/></ProtectedRoute>} />
                   <Route path="Signin" element={<Signin />} />
                   <Route path="Signup" element={<Signup />} />
                   <Route path="ProductDetails/:id/:category" element={ <ProductDetails/>} />
